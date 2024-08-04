@@ -63,6 +63,8 @@ public class RubikCube implements Subject<RubikCube> {
         return allActions;
     }
 
+
+
     public enum FACE {
         MAIN, RIGHT, BACK, LEFT, TOP, BOTTOM
     }
@@ -152,6 +154,17 @@ public class RubikCube implements Subject<RubikCube> {
         Arrays.stream(box).forEach(System.out::println);
 
         System.out.println(" ");
+    }
+    public List<List<Integer>> generateArray(){
+        List<List<Integer>> answer = new ArrayList<>();
+
+        answer.add(this.main.getValueList());
+        answer.add(this.right.getValueList());
+        answer.add(this.left.getValueList());
+        answer.add(this.back.getValueList());
+        answer.add(this.top.getValueList());
+        answer.add(this.bottom.getValueList());
+        return answer;
     }
 
     public void randomize(){
