@@ -153,4 +153,9 @@ public class RubikSide implements Cloneable{
                 .toArray(String[]::new);
     }
 
+    public int getValue(int i, int j) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getValue'");
+    }
+
 }

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 public class BackTree {
     private AtomicBoolean solutionFound = new AtomicBoolean(false);
     public Map<RubikCube, Integer> backTree;
@@ -54,7 +53,7 @@ public class BackTree {
             }
         }
         currentLevel += 1;
-        // Generate the rest of the backtree
+        // More states of backtree
         for (int i = 0; i < limitHash - 1; i++) {
             generateMoreStates();
         }
@@ -78,7 +77,7 @@ public class BackTree {
                         RCState newNode = new RCState(newState, node.getLevel() + 1, node);
                         if (!ArrTree.containsKey(newNode)) {
                             node.addChild(newNode);
-                            ArrTree.put(newNode, newNode.calculateMisplacedFacelets());
+                            ArrTree.put(newNode, 1); 
                             this.num_of_nodes++;
                         }
                     } catch (Exception e) {

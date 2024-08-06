@@ -77,6 +77,28 @@ public class RubikCube implements Subject<RubikCube> {
         actionList.forEach(action -> action.performAction(this));
     }
 
+        // Method to generate a unique hash for the current state of the cube
+    public int generateHash() {
+        int result = 17;
+        result = 31 * result + getFaceHash(main);
+        result = 31 * result + getFaceHash(right);
+        result = 31 * result + getFaceHash(back);
+        result = 31 * result + getFaceHash(left);
+        result = 31 * result + getFaceHash(top);
+        result = 31 * result + getFaceHash(bottom);
+        return result;
+    }
+
+    private int getFaceHash(RubikSide face) {
+        int faceHash = 7;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                faceHash = 31 * faceHash + face.getValue(i, j);
+            }
+        }
+        return faceHash;
+    }
+    
     public RubikCube(int size){
         this.size = size;
         main = new RubikSide(size, 1);

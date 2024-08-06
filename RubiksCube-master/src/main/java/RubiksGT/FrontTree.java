@@ -21,7 +21,7 @@ public class FrontTree {
         RubikCube rubix = new RubikCube(3);
         num_of_nodes = 0;
         try {
-            // Perform initial rotations on the cube
+            // initial rotations on the cube
             rubix.turnRowToRight(0);
             rubix.turnRowToRight(1);
             rubix.turnColDown(0);
@@ -53,37 +53,23 @@ public class FrontTree {
 
         for (Map.Entry<RCState, Integer> frontEntry : frontTreeNodes.entrySet()) {
             RCState frontNode = frontEntry.getKey();
-            Integer frontCost = frontEntry.getValue();
 
-            if (frontCost.equals(backTreeNode.calculateMisplacedFacelets())) {
-                List<List<Integer>> frontArray = frontNode.getRubiksCube().generateArray();
-                List<List<Integer>> backArray = backTreeNode.getRubiksCube().generateArray();
-
-                Integer[][] frontArrayAsArray = frontArray.stream()
-                        .map(inner -> inner.toArray(new Integer[0]))
-                        .toArray(Integer[][]::new);
-                Integer[][] backArrayAsArray = backArray.stream()
-                        .map(inner -> inner.toArray(new Integer[0]))
-                        .toArray(Integer[][]::new);
-
-                if (Arrays.deepEquals(frontArrayAsArray, backArrayAsArray)) {
-                    System.out.println("Match found!");
+            if (frontNode.equals(backTreeNode)) {
+                System.out.println("Match found!");
+                frontNode = frontNode.getParent();
+                while (frontNode != null) {
+                    path.add(frontNode);
                     frontNode = frontNode.getParent();
-                    while (frontNode != null) {
-                        path.add(frontNode);
-                        frontNode = frontNode.getParent();
-                    }
-                    Collections.reverse(path);
-                    return path;
                 }
+                Collections.reverse(path);
+                return path;
             }
         }
         currentLevel += 1;
         return path;
     }
-
     // Generates more front levels
-    public void generateMoreFrontStates() {
+        public void generateMoreFrontStates() {
         System.out.println("Expanding Front");
         Map<RCState, Integer> frontTreeNodes = new HashMap<>(ArrTree);
 
@@ -115,7 +101,7 @@ public class FrontTree {
                         RCState newNode = new RCState(newState, node.getLevel() + 1, node);
                         if (!ArrTree.containsKey(newNode)) {
                             node.addChild(newNode);
-                            ArrTree.put(newNode, newNode.calculateMisplacedFacelets());
+                            ArrTree.put(newNode, 1); // Using a default value since we're not using misplaced facelets anymore
                             this.num_of_nodes++;
                         }
                     } catch (Exception e) {
