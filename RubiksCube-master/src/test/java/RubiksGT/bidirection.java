@@ -1,3 +1,5 @@
+package RubiksGT;
+
 import java.util.*;
 
 public class MMsearchRubiks {
