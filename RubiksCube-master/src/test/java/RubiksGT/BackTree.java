@@ -1,11 +1,22 @@
+//////////////////////////////////////////////////////////////////////////////////
+///Backtree class
+///manages backward search tree and implements the algorithms
+
 package RubiksGT;
 
 import rubikcube.RubikCube;
 import solutioning.strategy.Action;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Collections; // Add this import for Collections.reverse
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BackTree {
@@ -20,6 +31,7 @@ public class BackTree {
     public int currentLevel = 0;
     private long timeA;
 
+//////initilizes trees and sets up initial parameters, generates initial states
     public BackTree(int limitBFS, int limitHash) {
         this.timeA = System.currentTimeMillis() / 1000;
         this.limitBFS = limitBFS;
@@ -33,7 +45,7 @@ public class BackTree {
         frontTree.generate();
         generateInitialStates();
     }
-
+///expands initial state of the cube and adds resulting tree states
     public void generateInitialStates() {
         System.out.println("Expanding Back");
         this.solvedNode = new RCState(new RubikCube(3), 0, null);
@@ -77,7 +89,7 @@ public class BackTree {
                         RCState newNode = new RCState(newState, node.getLevel() + 1, node);
                         if (!ArrTree.containsKey(newNode)) {
                             node.addChild(newNode);
-                            ArrTree.put(newNode, 1); 
+                            ArrTree.put(newNode, 1);
                             this.num_of_nodes++;
                         }
                     } catch (Exception e) {
@@ -91,6 +103,53 @@ public class BackTree {
 
     public int getNumNodes() {
         return this.num_of_nodes;
+    }
+
+    public boolean BFS(RCState root, int depthLimit) {
+        // create queue for BFS
+        Queue<RCState> queue = new LinkedList<>();
+        //set to keep track of states and avoid processing the same states more than once
+        Set<RCState> visited = new HashSet<>();
+
+        //add root to node queue and mark it as visited
+        queue.add(root);
+        visited.add(root);
+        //continue processing until queue is empty
+        while (!queue.isEmpty()) {
+            // remove the next node from queue
+            RCState current = queue.poll();
+            //check if node represents a solved state
+            if (current.getRubiksCube().isComplete()) {
+                //if solved, find and print path from the root
+                List<RCState> path = getPathToRoot(current);
+                for (RCState step : path) {
+                    step.getRubiksCube().print();
+                }
+                return true;
+            }
+            // if current nodes level is less than the depth limit, explore its children
+            if (current.getLevel() < depthLimit) {
+                //iterate each child of the current node
+                for (RCState child : current.getChildren()) {
+                    //if the child has not yet been visited, add child to the queue and mark as visited
+                    if (!visited.contains(child)) {
+                        queue.add(child);
+                        visited.add(child);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private List<RCState> getPathToRoot(RCState node) {
+        List<RCState> path = new ArrayList<>();
+        while (node != null) {
+            path.add(node);
+            node = node.getParent();
+        }
+        Collections.reverse(path);
+        return path;
     }
 
     public boolean DFS(RCState currentNode, int depthLimit) {
@@ -124,25 +183,32 @@ public class BackTree {
         return false;
     }
 
-    public boolean sequentialDFS(RCState root, int depthLimit) {
-        List<RCState> rootChildren = getChildrenNodes(root);
-        for (RCState subRoot : rootChildren) {
-            if (DFS(subRoot, depthLimit - 1)) {
-                solutionFound.set(true);
-                printInfo(this);
+    public boolean sequentialBFS(RCState root, int depthLimit) {
+        Queue<RCState> queue = new LinkedList<>();
+        Set<RCState> visited = new HashSet<>();
+
+        queue.add(root);
+        visited.add(root);
+
+        while (!queue.isEmpty() && depthLimit > 0) {
+            RCState current = queue.poll();
+            if (current.getRubiksCube().isComplete()) {
+                List<RCState> path = getPathToRoot(current);
+                for (RCState step : path) {
+                    step.getRubiksCube().print();
+                }
                 return true;
             }
+
+            for (RCState child : current.getChildren()) {
+                if (!visited.contains(child)) {
+                    queue.add(child);
+                    visited.add(child);
+                }
+            }
+            depthLimit--;
         }
         return false;
-    }
-
-    public List<RCState> getChildrenNodes(RCState rootNode) {
-        List<RCState> childrenNodes = new ArrayList<>();
-        List<RCState> children = rootNode.getChildren();
-        for (RCState child : children) {
-            childrenNodes.add(child);
-        }
-        return childrenNodes;
     }
 
     public void printInfo(BackTree backTest) {
