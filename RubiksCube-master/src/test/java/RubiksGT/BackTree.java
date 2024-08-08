@@ -179,27 +179,41 @@ public class BackTree {
             backVisited.add(solvedNode);
 
             while (!frontQueue.isEmpty() && !backQueue.isEmpty()) {
+                // Expand the front tree
                 if (BFSLevel(frontQueue, frontVisited, backVisited)) {
                     return true;
                 }
 
+                // Check for intersection
+                if (checkIntersection(frontVisited, backVisited)) {
+                    return true;
+                }
+
+                // Expand the back tree
                 if (BFSLevel(backQueue, backVisited, frontVisited)) {
                     return true;
                 }
 
-                //Check for matching path
-                for (RCState backNode : backVisited) {
-                    List<RCState> path = frontTree.getMatchingPath(backNode);
-                    if (!path.isEmpty()) {
-                        path.forEach(node -> node.getRubiksCube().print());
-                        return true;
-                    }
+                // Check for intersection again after expanding back tree
+                if (checkIntersection(frontVisited, backVisited)) {
+                    return true;
                 }
-
             }
         }
         return false;
     }
+
+    private boolean checkIntersection(Set<RCState> frontVisited, Set<RCState> backVisited) {
+        for (RCState frontNode : frontVisited) {
+            if (backVisited.contains(frontNode)) {
+                System.out.println("Intersection found!");
+                printSolutionPath(frontNode);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private boolean BFSLevel(Queue<RCState> queue, Set<RCState> visited, Set<RCState> otherVisited) {
         int size = queue.size();
