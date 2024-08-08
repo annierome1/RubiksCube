@@ -148,12 +148,14 @@ public class RubikCube implements Subject<RubikCube> {
         Map<Integer, List<Integer>> result = valueList.stream().collect(Collectors.groupingBy(i -> i));
         if(result.keySet().size() != 6) return false;
         int expectedCount = getSize() * getSize();
-        if(result.get(1).size() != expectedCount) return false;
-        if(result.get(2).size() != expectedCount) return false;
-        if(result.get(3).size() != expectedCount) return false;
-        if(result.get(4).size() != expectedCount) return false;
-        if(result.get(5).size() != expectedCount) return false;
-        return result.get(6).size() == expectedCount;
+        if(result.get(Optional.of(1)).size() != expectedCount) return false;
+        if(result.get(Optional.of(2)).size() != expectedCount) return false;
+        if(result.get(Optional.of(3)).size() != expectedCount) return false;
+        if(result.get(Optional.of(4)).size() != expectedCount) {
+            return false;
+        }
+        if(result.get(Optional.of(5)).size() != expectedCount) return false;
+        return result.get(Optional.of(6)).size() == expectedCount;
     }
 
     public boolean isComplete(){
