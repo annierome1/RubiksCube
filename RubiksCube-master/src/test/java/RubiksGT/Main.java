@@ -1,4 +1,25 @@
 package RubiksGT;
+/*
+ SOURCES:
+  Solving Rubik's Cube Using Graph Theory
+  Khemani, Chanchal; Doshi, Jay; Duseja, Juhi; Shah, Krapi; Udmale, Sandeep; Sambhe, Vijay
+  Advances in Intelligent Systems and Computing, 2019
+  DOI: 10.1007/978-981-13-1132-1_24
+
+  This implementation aims to solve the Rubik's Cube using the methodologies discussed in the paper:
+  - Breadth-First Search (BFS)
+  - Depth-Limited Search (DLS)
+  - Bidirectional Search
+  - Utilizing HashMaps for state comparison
+
+ Initial Rubik's Cube implementation:
+ Simulating Rubik Cube Actions with Java
+ https://levelup.gitconnected.com/simulating-rubik-cube-actions-with-java-10cf44bc6014
+
+
+
+
+ */
 
 import rubikcube.RubikCube;
 

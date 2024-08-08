@@ -7,6 +7,7 @@ import java.util.Objects;
 import rubikcube.RubikCube;
 
 public class RCState {
+    private int cost;
     private RubikCube rubiksCube;
     private int level;
     private RCState parent;
@@ -18,9 +19,30 @@ public class RCState {
         this.level = level;
         this.parent = parent;
         this.children = new ArrayList<>();
+        this.cost = calculateMisplacedFacelets();
+    }
+    // Calculate the cost of misplaced facelets
+    public int calculateMisplacedFacelets() {
+        int misplacedCount = 0;
+        List<List<Integer>> currentState = this.rubiksCube.generateArray();
+        RubikCube solved = new RubikCube(3);
+        List<List<Integer>> solvedState = solved.generateArray();
+
+        for (int i = 0; i < currentState.size(); i++) {
+            for (int j = 0; j < currentState.get(i).size(); j++) {
+                if (!currentState.get(i).get(j).equals(solvedState.get(i).get(j))) {
+                    misplacedCount++;
+                }
+            }
+        }
+        return misplacedCount;
+    }
+    // Getters
+
+    public int getCost() {
+        return cost;
     }
 
-    // Getters
     public RubikCube getRubiksCube() {
         return rubiksCube;
     }
