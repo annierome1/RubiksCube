@@ -1,24 +1,45 @@
 package RubiksGT;
 
 import rubikcube.RubikCube;
-import RubiksGT.BackTree;
-import RubiksGT.RCState;
 
 public class Main {
     public static void main(String[] args) {
-        //define bfs and hash limits
-        int limitBFS = 3;
-        int limitHash = 3;
-        // new instance of backtree class is created
+        // Define BFS and hash limits
+        int limitBFS = 5; // Adjust as needed
+        int limitHash = 3; // Adjust as needed
+        int depthLimit = 10; // Adjust as needed
+
+        // New instance of BackTree class is created
         BackTree backTree = new BackTree(limitBFS, limitHash);
-        // new instance of RC state is created, representing intitial state of cube
+
+        // New instance of RCState is created, representing the initial state of the cube
         RCState rootState = new RCState(new RubikCube(3), 0, null);
-        //preform bfs from root
-        boolean foundSolution = backTree.sequentialBFS(rootState, limitBFS);
+
+        // Perform BFS from root
+        boolean foundSolution = backTree.BFS(rootState, depthLimit);
         if (foundSolution) {
-            System.out.println("Solution found!");
+            System.out.println("Solution found with BFS!");
         } else {
-            System.out.println("No solution found.");
+            // If BFS fails, try DLS
+            System.out.println("No solution found with BFS. Trying DLS...");
+
+            foundSolution = backTree.DLS(rootState, depthLimit);
+            if (foundSolution) {
+                System.out.println("Solution found with DLS!");
+            } else {
+                // If DLS also fails, try bidirectional search
+                System.out.println("No solution found with DLS. Trying bidirectional search...");
+
+                foundSolution = backTree.bidirectionalSearch(rootState, depthLimit);
+                if (foundSolution) {
+                    System.out.println("Solution found with bidirectional search!");
+                } else {
+                    System.out.println("No solution found.");
+                }
+            }
         }
+
+        // Print additional information
+        backTree.printInfo();
     }
 }

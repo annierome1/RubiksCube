@@ -13,6 +13,7 @@ public class FrontTree {
     public int limitBFS;
     public int currentLevel;
 
+//Constructors
     public FrontTree(BackTree backTree) {
         limitBFS = backTree.limitBFS;
         frontTree = new HashMap<>();
@@ -20,33 +21,18 @@ public class FrontTree {
         this.backTree = backTree;
         RubikCube rubix = new RubikCube(3);
         num_of_nodes = 0;
-        try {
-            // initial rotations on the cube
-            rubix.turnRowToRight(0);
-            rubix.turnRowToRight(1);
-            rubix.turnColDown(0);
-            rubix.turnRowToRight(2);
-            rubix.turnRowToLeft(1);
-            rubix.turnColDown(0);
-            rubix.turnRowToRight(2);
-            rubix.turnColDown(0);
-            rubix.turnRowToRight(2);
-            rubix.turnColUp(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        rubix.randomize(); // Randomize the initial state of the Rubik's cube
         RCState rubix1 = new RCState(rubix, 0, null);
         ArrTree.put(rubix1, 1);
     }
-
-    // Start generation of front tree
+//generate initial states
     public void generate() {
         for (int i = 0; i < limitBFS; i++) {
             generateMoreFrontStates();
         }
     }
-
-    // Checks if backTreeNode matches any front tree nodes, if so, return the path
+    // Return path if a back tree node matches any on the front tree
     public List<RCState> getMatchingPath(RCState backTreeNode) {
         Map<RCState, Integer> frontTreeNodes = ArrTree;
         List<RCState> path = new ArrayList<>();
@@ -68,9 +54,9 @@ public class FrontTree {
         currentLevel += 1;
         return path;
     }
-    // Generates more front levels
-        public void generateMoreFrontStates() {
-        System.out.println("Expanding Front");
+
+//generate more states for the front tree
+    public void generateMoreFrontStates() {
         Map<RCState, Integer> frontTreeNodes = new HashMap<>(ArrTree);
 
         for (Map.Entry<RCState, Integer> frontEntry : frontTreeNodes.entrySet()) {
@@ -101,7 +87,7 @@ public class FrontTree {
                         RCState newNode = new RCState(newState, node.getLevel() + 1, node);
                         if (!ArrTree.containsKey(newNode)) {
                             node.addChild(newNode);
-                            ArrTree.put(newNode, 1); // Using a default value since we're not using misplaced facelets anymore
+                            ArrTree.put(newNode, 1);
                             this.num_of_nodes++;
                         }
                     } catch (Exception e) {
@@ -113,9 +99,7 @@ public class FrontTree {
         currentLevel += 1;
     }
 
-    // Returns number of nodes in the front tree
     public int getNumNodes() {
         return this.num_of_nodes;
     }
 }
-
