@@ -42,10 +42,17 @@ public class FrontTree {
 
             if (frontNode.equals(backTreeNode)) {
                 System.out.println("Match found!");
-                frontNode = frontNode.getParent();
+
+            RCState currentNode = frontNode;
                 while (frontNode != null) {
                     path.add(frontNode);
                     frontNode = frontNode.getParent();
+
+
+                    //frontNode = frontNode.getParent();
+                //while (frontNode != null) {
+                  //  path.add(frontNode);
+                   // frontNode = frontNode.getParent();
                 }
                 Collections.reverse(path);
                 return path;
