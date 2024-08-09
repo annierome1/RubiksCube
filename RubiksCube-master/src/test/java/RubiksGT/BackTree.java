@@ -166,6 +166,7 @@ public class BackTree {
 
     public boolean bidirectionalSearch(RCState root, int depthLimit) {
         for (int depth = 1; depth <= depthLimit; depth++) {
+            //similar functionality to BFS search
             Set<RCState> frontVisited = new HashSet<>();
             Set<RCState> backVisited = new HashSet<>();
 
@@ -200,7 +201,7 @@ public class BackTree {
         return false;
     }
 
-
+ //usage is to make bidirectional search more efficient showing where both trees hit
     private boolean checkIntersection(Set<RCState> frontVisited, Set<RCState> backVisited) {
         for (RCState frontNode : frontVisited) {
             if (backVisited.contains(frontNode)) {
@@ -212,24 +213,27 @@ public class BackTree {
         return false;
     }
 
-
+    //one level of BFS, processing all nodes --> current level in the queue
     private boolean BFSLevel(Queue<RCState> queue, Set<RCState> visited, Set<RCState> otherVisited) {
         int size = queue.size();
+        //iterate all node in level
         for (int i = 0; i < size; i++) {
             RCState current = queue.poll();
-
+//check if visited
             if (otherVisited.contains(current)) {
                 printSolutionPath(current);
                 return true;
             }
-
+//generate child node
             for (Action<RubikCube> action : current.getRubiksCube().getAllActions()) {
                 try {
+                    //create new state by clone
                     RubikCube newState = current.getRubiksCube().clone();
                     newState.performAction(action);
+                    //create new RC for child
                     RCState child = new RCState(newState, current.getLevel() + 1, current);
                     current.addChild(child);
-
+//child not visited --> queue
                     if (!visited.contains(child)) {
                         queue.add(child);
                         visited.add(child);
@@ -246,6 +250,7 @@ public class BackTree {
         List<RCState> path = new ArrayList<>();
         while (node != null) {
             path.add(node);
+            //traverse from goal to root
             node = node.getParent();
         }
         Collections.reverse(path);
@@ -253,7 +258,7 @@ public class BackTree {
             step.getRubiksCube().print();
         }
     }
-
+//return path from given node
     private List<RCState> getPathToRoot(RCState node) {
         List<RCState> path = new ArrayList<>();
         while (node != null) {
