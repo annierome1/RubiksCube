@@ -19,10 +19,10 @@ public class RCState {
         this.level = level;
         this.parent = parent;
         this.children = new ArrayList<>();
-        this.cost = calculateMisplacedFacelets();
+        this.cost = calculateMisplacedFaces();
     }
-    // Calculate the cost of misplaced facelets
-    public int calculateMisplacedFacelets() {
+    // count misplaced facelets which is passed as cost
+    public int calculateMisplacedFaces() {
         int misplacedCount = 0;
         List<List<Integer>> currentState = this.rubiksCube.generateArray();
         RubikCube solved = new RubikCube(3);
@@ -59,7 +59,7 @@ public class RCState {
         return children;
     }
 
-    // Add a child node
+
     public void addChild(RCState child) {
         children.add(child);
     }

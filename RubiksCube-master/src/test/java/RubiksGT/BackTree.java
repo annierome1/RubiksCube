@@ -29,10 +29,10 @@ public class BackTree {
         frontTree = new FrontTree(this);
 
         frontTree.generate();
-        generateInitialStates();
+        generateSolvedStates();
     }
  ///expands intial states of the cube and adds resulting tree states
-    public void generateInitialStates() {
+    public void generateSolvedStates() {
         System.out.println("Expanding Back");
         this.solvedNode = new RCState(new RubikCube(3), 0, null);
         ArrTree.put(this.solvedNode, 0);
@@ -183,25 +183,23 @@ public class BackTree {
                 if (BFSLevel(frontQueue, frontVisited, backVisited)) {
                     return true;
                 }
-
-                // Check for intersection
-                if (checkIntersection(frontVisited, backVisited)) {
-                    return true;
-                }
-
-                // Expand the back tree
                 if (BFSLevel(backQueue, backVisited, frontVisited)) {
                     return true;
                 }
 
-                // Check for intersection again after expanding back tree
-                if (checkIntersection(frontVisited, backVisited)) {
-                    return true;
+                // Check for matching path
+                for (RCState backNode : backVisited) {
+                    List<RCState> path = frontTree.getMatchingPath(backNode);
+                    if (!path.isEmpty()) {
+                        path.forEach(node -> node.getRubiksCube().print());
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
+
 
     private boolean checkIntersection(Set<RCState> frontVisited, Set<RCState> backVisited) {
         for (RCState frontNode : frontVisited) {

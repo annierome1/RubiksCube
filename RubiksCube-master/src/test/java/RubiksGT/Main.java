@@ -1,22 +1,28 @@
 package RubiksGT;
 /*
+August 8th, 2024
+
+Annie Rome, Connor Loudermilk, Luke Talham
+CSC 301 Advanced Data Structures
+
+
+This program initializes and executes a bidirectional search algorithm to solve a Rubik's Cube puzzle.
+It first attempts to find a solution using BFS within a specified limit, followed by DFS if BFS fails.
+Finally, the program performs bidirectional search by expanding from both the scrambled and solved cube states, checking for a match between the search trees.
+
+
+
  SOURCES:
   Solving Rubik's Cube Using Graph Theory
   Khemani, Chanchal; Doshi, Jay; Duseja, Juhi; Shah, Krapi; Udmale, Sandeep; Sambhe, Vijay
   Advances in Intelligent Systems and Computing, 2019
   DOI: 10.1007/978-981-13-1132-1_24
 
-  This implementation aims to solve the Rubik's Cube using the methodologies discussed in the paper:
-  - Breadth-First Search (BFS)
-  - Depth-Limited Search (DLS)
-  - Bidirectional Search
-  - Utilizing HashMaps for state comparison
-
  Initial Rubik's Cube implementation:
  Simulating Rubik Cube Actions with Java
  https://levelup.gitconnected.com/simulating-rubik-cube-actions-with-java-10cf44bc6014
 
-
+ https://github.com/troykopec/RubiksCube
 
 
  */
@@ -36,6 +42,20 @@ public class Main {
         // New instance of RCState is created, representing the initial state of the cube
         RCState rootState = new RCState(new RubikCube(3), 0, null);
 
+        boolean foundSolution = backTree.bidirectionalSearch(rootState, limitBFS);
+
+        if (foundSolution) {
+            System.out.println("Solution found!");
+        } else {
+            System.out.println("No solution found.");
+
+        }
+        backTree.printInfo();
+
+    }
+}
+
+        /*
         // Perform BFS from root
         boolean foundSolution = backTree.BFS(rootState, depthLimit);
         if (foundSolution) {
